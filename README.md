@@ -27,5 +27,6 @@ Usage
 
 Once the extension is installed, simply use it in your code by  :
 
-```php
-<?= \kittyfamous\webmanager\AutoloadExample::widget(); ?>```# category_with_nestedsetbehavior
+生成无限分类表跑migration
+
+配置好module，直接访问controller
