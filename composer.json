@@ -1,0 +1,21 @@
+{
+    "name": "kittyfamous/yii2-web-manager",
+    "description": "yii2 backend web manager extensions",
+    "type": "yii2-extension",
+    "keywords": ["yii2","extension"],
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "kittyfamous",
+            "email": "kittyfamous@foxmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "kittyfamous\\webmanager\\": ""
+        }
+    }
+}
