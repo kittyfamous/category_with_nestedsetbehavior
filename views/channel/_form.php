@@ -19,12 +19,8 @@ if(!$model->isNewRecord){
     <?php if(!$model->isNewRecord && isset($parent)): ?>
         <?php $model->parent=$parent->id; ?>
     <?php endif ?>
-    <?= $form->field($model,'parent')->dropDownList($model->getDropDownList()); ?>
-    <?= $form->field($model, 'category_zh')->textInput(['maxlength' => 255]) ?>
-    <?= $form->field($model, 'category_en')->textInput(['maxlength' => 255]) ?>
-    <?= $form->field($model, 'category_fr')->textInput(['maxlength' => 255]) ?>
-    <?= $form->field($model, 'category_ru')->textInput(['maxlength' => 255]) ?>
-    <?= $form->field($model, 'category_es')->textInput(['maxlength' => 255]) ?>
+    <?= $form->field($model,'parent')->dropDownList($model->getDropDownList(),['prompt'=>'请选择父节点']); ?>
+    <?= $form->field($model, 'channel')->textInput(['maxlength' => 255]) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('common/app', 'Create') : Yii::t('common/app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

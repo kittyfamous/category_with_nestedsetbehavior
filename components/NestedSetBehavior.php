@@ -1,6 +1,6 @@
 <?php
 
-namespace kittyfamous\components;
+namespace kittyfamous\webmanager\components;
 
 use Yii;
 use yii\base\Behavior;

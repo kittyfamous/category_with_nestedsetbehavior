@@ -6,7 +6,8 @@ use Yii;
 use kittyfamous\webmanager\models\base\Category as BaseCategory;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
-use kittyfamous\components\NestedSetBehavior;
+use kittyfamous\webmanager\components\NestedSetBehavior;
+use yii\helpers\VarDumper;
 
 /**
  * This is the model class for table "category".
@@ -59,12 +60,33 @@ class Category extends BaseCategory
         ];
     }
 
-    public function getDropDownList(){
-        $category=new Category;
-        $categories=$category->roots()->all();
-        $level=0;
+    //生成带optgroup的dropdown
+    public static function getOptgroupDropDownList($id = 'root'){
+        $category = new Category;
+        if($id == 'root')
+            $categories = $category->roots()->all();
+        else
+            $categories = Category::findOne($id)->children()->all();
+        $items = [];
+        foreach ($categories as $key => $value){
+            $children = $value->descendants()->all();
+            foreach ($children as $child) {
+                $items[$value->category_zh][$child->id] = $child->category_zh;
+            }
+        }
+        return $items;
+    }
 
-        $items[0]=Yii::t('common/app','Please select the parent node');
+    //生成下拉列表 key=>value
+    public static function getDropDownList($id = 'root'){
+        $category=new Category;
+        if($id == 'root')
+            $categories=$category->roots()->all();
+        else
+            $categories=Category::findOne($id)->children()->all();
+        $level=0;
+//        $items[0]=Yii::t('common/app','Please select the parent node');
+        $items = [];
         foreach ($categories as $key => $value) {
             $items[$value->attributes['id']]=$value->attributes['category_zh'];
             $children=$value->descendants()->all();
@@ -82,7 +104,7 @@ class Category extends BaseCategory
         }
         return $items;
     }
-
+    //生成树形结构 使用场景后台
     public static function renderTree(){
         $c=new Category();
         $roots=$c->roots()->all();
@@ -97,7 +119,6 @@ class Category extends BaseCategory
                     echo Html::beginTag('ul')."\n";
                 }else{
                     echo Html::endTag('li')."\n";
-
                     for($i=$level-$category->level;$i;$i--){
                         echo Html::endTag('ul')."\n";
                         echo Html::endTag('li')."\n";
@@ -118,14 +139,12 @@ class Category extends BaseCategory
                 ]);
                 $level=$category->level;
             }
-
             for($i=$level;$i;$i--){
                 echo Html::endTag('li')."\n";
                 echo Html::endTag('ul')."\n";
             }
         }
     }
-
     //获取 注册用户可以发贴的类型
     public static function getCategory($id = 1){
 //        $data =  Category::find()->where(['parent'=>$parent])->orderBy('lft')->asArray()->all();
@@ -133,13 +152,13 @@ class Category extends BaseCategory
         $row = $data->children()->all();
         return ArrayHelper::map($row,'id','category_zh');
     }
-
+    //发贴rule规则时使用 角色用户
     public static function getLoginUserArticleCategory($id = 3){
         $data = Category::findOne($id);
         $row = $data->children()->select('id')->column();
         return $row;
     }
-
+    //发贴rule规则时使用 角色管理员
     public static function getAdminArticleCategory($id = 2){
         $data = Category::findOne($id);
         $row = $data->children()->select('id')->column();
